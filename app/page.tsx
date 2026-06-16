@@ -4,12 +4,12 @@ const sessions = [
   {
     date: "6/20",
     title: "내가 해보고 싶은 작업을 정하고 AI와 시작하기",
-    body: "막연한 아이디어를 오늘 해볼 수 있는 작업으로 좁히고, AI 툴을 어디에 붙이면 좋을지 함께 찾아봅니다.",
+    body: "막연한 아이디어를 오늘 해볼 수 있는 작업으로 좁히고, 각자의 일과 생활에 AI를 어디에 붙이면 좋을지 함께 찾아봅니다.",
   },
   {
     date: "7/18",
     title: "작업 중 막힌 지점 풀어보기",
-    body: "각자 해본 과정을 나누고, 프롬프트와 도구 선택을 조정하면서 병목을 같이 풀어봅니다.",
+    body: "각자 해본 과정을 나누고, 프롬프트와 도구 선택, 작업 범위, 실행 순서를 조정하면서 병목을 같이 풀어봅니다.",
   },
   {
     date: "8/29",
@@ -23,7 +23,27 @@ const rhythms = [
   "매 시간 10분씩 쉬면서 집중력을 다시 채웁니다.",
   "고민이나 막히는 지점은 바로 공유합니다. 같이 보면 의외로 빨리 풀릴 때가 많습니다.",
   "새로 발견한 툴, 프롬프트, 방식이 있다면 자유롭게 나눕니다.",
+  "서로 다른 업종과 맥락을 짧게 설명하고, 질문은 편하게 주고받습니다.",
   "각자의 작업 속도와 몰입 시간을 존중합니다.",
+];
+
+const participantContexts = [
+  "공공/지자체",
+  "금융/보험",
+  "제조/화학",
+  "콘텐츠/기획",
+  "창업",
+  "개발/AI 실무",
+  "마케팅/영업",
+];
+
+const motivationThemes = [
+  "미루던 AI 작업을 실제로 진척시키기",
+  "반복 업무를 자동화할 실마리 찾기",
+  "개인 프로젝트나 에이전트 고도화하기",
+  "프롬프트와 툴 사용법을 서로 공유하기",
+  "다른 사람들의 활용 방식을 가까이서 보기",
+  "혼자서는 어려운 몰입 환경과 데드라인 만들기",
 ];
 
 export default function Home() {
@@ -94,6 +114,58 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:px-10">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+          <div>
+            <p className="text-sm font-bold text-[#0c7b61]">
+              함께 모이는 사람들
+            </p>
+            <h2 className="mt-3 text-3xl font-bold leading-tight">
+              서로 다른 배경에서, 각자의 작업을 가져옵니다
+            </h2>
+            <p className="mt-5 text-base leading-8 text-[#4b4b45]">
+              공공, 금융/보험, 제조/화학, 콘텐츠/기획, 창업, 개발/AI 실무 등
+              다양한 맥락의 사람들이 모입니다. 중요한 건 같은 직무가 아니라,
+              각자 미뤄두었던 일을 AI와 함께 실제로 움직여보려는 마음입니다.
+            </p>
+          </div>
+
+          <div className="grid gap-5">
+            <div>
+              <h3 className="text-lg font-bold text-[#20201d]">
+                이런 배경이 섞여 있어요
+              </h3>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {participantContexts.map((context) => (
+                  <span
+                    key={context}
+                    className="rounded-md border border-[#d9ddd0] bg-white px-3 py-2 text-sm font-bold text-[#34342f]"
+                  >
+                    {context}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold text-[#20201d]">
+                이런 마음으로 모였어요
+              </h3>
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                {motivationThemes.map((theme) => (
+                  <li
+                    key={theme}
+                    className="rounded-md bg-[#f7f7f2] px-3 py-3 text-sm font-semibold leading-6 text-[#3b3b35]"
+                  >
+                    {theme}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="themes" className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:px-10">
         <div className="grid gap-8 lg:grid-cols-[0.82fr_1.18fr]">
           <div>
@@ -103,8 +175,8 @@ export default function Home() {
             </h2>
             <p className="mt-5 text-base leading-8 text-[#4b4b45]">
               완성된 결과물을 가져오는 모임이 아니라, 하고 싶은 작업을
-              실제로 시도해보는 모임입니다. 서로의 과정과 고민을 보면서 AI를
-              내 일에 붙이는 감각을 함께 키웁니다.
+              실제로 시도해보는 모임입니다. 서로 다른 직장과 커뮤니티 맥락에서
+              나온 고민을 같이 보고, AI를 내 일에 붙이는 감각을 함께 키웁니다.
             </p>
           </div>
 
