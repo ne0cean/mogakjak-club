@@ -1,3 +1,7 @@
 [build]
+  command = "echo skip"
   publish = "netlify-public"
+
+[build.environment]
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
 

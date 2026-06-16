@@ -1,23 +1,23 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
 @import "tailwindcss";
 
 :root {
-  --background: #f7f7f2;
-  --foreground: #191919;
+  --background: #ffffff;
+  --foreground: #111111;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-system-sans);
-  --font-mono: var(--font-system-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
-    "Noto Sans KR", "Malgun Gothic", Arial, sans-serif;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
   margin: 0;
+  word-break: keep-all;
 }
 
 * {

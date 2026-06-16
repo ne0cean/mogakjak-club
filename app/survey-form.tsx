@@ -69,15 +69,15 @@ function ChoiceGroup({
 }) {
   return (
     <fieldset className="space-y-3">
-      <legend className="text-lg font-bold text-[#20201d]">{legend}</legend>
+      <legend className="text-base font-bold text-[#111]">{legend}</legend>
       <div className="grid gap-2 sm:grid-cols-2">
         {options.map((option) => (
           <label
             key={option}
-            className="flex min-h-12 items-center gap-3 rounded-md border border-[#dde0d6] bg-white px-3 py-2 text-sm font-semibold text-[#30302b] transition hover:border-[#0c7b61]"
+            className="flex min-h-11 items-center gap-3 rounded-xl border border-[#e4e4e4] bg-white px-3 py-2 text-sm font-medium text-[#333] transition hover:border-[#111] cursor-pointer"
           >
             <input
-              className="h-4 w-4 accent-[#0c7b61]"
+              className="h-4 w-4 accent-[#111111] shrink-0"
               name={name}
               required={required && type === "radio"}
               type={type}
@@ -152,17 +152,25 @@ export default function SurveyForm() {
 
   if (status === "submitted") {
     return (
-      <div className="rounded-lg border border-[#cdebdc] bg-[#f1fbf5] p-6">
-        <p className="text-sm font-bold text-[#0c7b61]">응답 완료</p>
-        <h3 className="mt-2 text-2xl font-bold text-[#181916]">
+      <div className="rounded-2xl border border-[#e4e4e4] bg-white p-6">
+        <p
+          className="font-mono text-[11px] uppercase text-[#aaa]"
+          style={{ letterSpacing: "0.16em" }}
+        >
+          응답 완료
+        </p>
+        <h3
+          className="mt-3 text-2xl font-bold text-[#111]"
+          style={{ letterSpacing: "-0.02em" }}
+        >
           저장되었어요. 첫 모임에서 만나요.
         </h3>
-        <p className="mt-4 text-base leading-8 text-[#3f473f]">
+        <p className="mt-4 text-[15px] leading-8 text-[#666]">
           1회차에는 해보고 싶은 작업 하나만 가볍게 가져오면 됩니다.
           6/20 토요일 14:00, 시청역 5층 오아시스덕수궁에서 시작합니다.
         </p>
         <button
-          className="mt-5 rounded-md border border-[#0c7b61] px-4 py-2 text-sm font-bold text-[#0c7b61] transition hover:bg-white"
+          className="mt-5 rounded-full border border-[#ddd] px-5 py-2.5 text-sm font-bold text-[#444] transition hover:border-[#111] hover:text-[#111]"
           type="button"
           onClick={() => {
             window.localStorage.removeItem("ai-mogakjak-submitted");
@@ -177,15 +185,15 @@ export default function SurveyForm() {
 
   return (
     <form
-      className="space-y-7 rounded-lg border border-[#d9ddd0] bg-[#fbfbf7] p-5 shadow-sm sm:p-6"
+      className="space-y-6 rounded-2xl border border-[#e4e4e4] bg-white p-5 sm:p-6"
       onSubmit={onSubmit}
     >
       <label className="block space-y-2">
-        <span className="text-lg font-bold text-[#20201d]">
+        <span className="text-base font-bold text-[#111]">
           이번 시즌에 해보고 싶은 작업은 무엇인가요?
         </span>
         <textarea
-          className="min-h-28 w-full rounded-md border border-[#d8dace] bg-white p-3 text-base leading-7 outline-none transition focus:border-[#0c7b61] focus:ring-2 focus:ring-[#bcebd7]"
+          className="min-h-28 w-full rounded-xl border border-[#e4e4e4] bg-white p-3 text-[15px] leading-7 outline-none transition focus:border-[#111] focus:ring-1 focus:ring-[#111]/10"
           maxLength={800}
           name="desiredWork"
           required
@@ -194,11 +202,11 @@ export default function SurveyForm() {
       </label>
 
       <label className="block space-y-2">
-        <span className="text-lg font-bold text-[#20201d]">
+        <span className="text-base font-bold text-[#111]">
           지금 가장 궁금하거나 막히는 지점은 무엇인가요?
         </span>
         <textarea
-          className="min-h-28 w-full rounded-md border border-[#d8dace] bg-white p-3 text-base leading-7 outline-none transition focus:border-[#0c7b61] focus:ring-2 focus:ring-[#bcebd7]"
+          className="min-h-28 w-full rounded-xl border border-[#e4e4e4] bg-white p-3 text-[15px] leading-7 outline-none transition focus:border-[#111] focus:ring-1 focus:ring-[#111]/10"
           maxLength={800}
           name="blocker"
           required
@@ -221,7 +229,7 @@ export default function SurveyForm() {
         type="checkbox"
       />
       <input
-        className="w-full rounded-md border border-[#d8dace] bg-white p-3 text-base outline-none transition focus:border-[#0c7b61] focus:ring-2 focus:ring-[#bcebd7]"
+        className="w-full rounded-xl border border-[#e4e4e4] bg-white p-3 text-[15px] outline-none transition focus:border-[#111] focus:ring-1 focus:ring-[#111]/10"
         maxLength={160}
         name="toolsOther"
         placeholder="기타 AI 툴이 있다면 적어주세요"
@@ -234,7 +242,7 @@ export default function SurveyForm() {
         type="checkbox"
       />
       <input
-        className="w-full rounded-md border border-[#d8dace] bg-white p-3 text-base outline-none transition focus:border-[#0c7b61] focus:ring-2 focus:ring-[#bcebd7]"
+        className="w-full rounded-xl border border-[#e4e4e4] bg-white p-3 text-[15px] outline-none transition focus:border-[#111] focus:ring-1 focus:ring-[#111]/10"
         maxLength={160}
         name="goalsOther"
         placeholder="기타 기대하는 것이 있다면 적어주세요"
@@ -247,20 +255,20 @@ export default function SurveyForm() {
         type="checkbox"
       />
       <input
-        className="w-full rounded-md border border-[#d8dace] bg-white p-3 text-base outline-none transition focus:border-[#0c7b61] focus:ring-2 focus:ring-[#bcebd7]"
+        className="w-full rounded-xl border border-[#e4e4e4] bg-white p-3 text-[15px] outline-none transition focus:border-[#111] focus:ring-1 focus:ring-[#111]/10"
         maxLength={160}
         name="firstSessionTopicsOther"
         placeholder="기타 주제가 있다면 적어주세요"
       />
 
       {error ? (
-        <p className="rounded-md border border-[#f0b4ad] bg-[#fff4f2] px-3 py-2 text-sm font-semibold text-[#9b2c22]">
+        <p className="rounded-xl border border-[#f0c0bb] bg-[#fff4f2] px-4 py-3 text-sm font-medium text-[#a33]">
           {error}
         </p>
       ) : null}
 
       <button
-        className="w-full rounded-md bg-[#0c7b61] px-5 py-4 text-base font-bold text-white transition hover:bg-[#096b55] disabled:cursor-not-allowed disabled:bg-[#8ba59a]"
+        className="w-full rounded-full bg-[#111111] px-5 py-4 text-sm font-bold text-white transition hover:bg-[#333] disabled:cursor-not-allowed disabled:bg-[#999]"
         disabled={status === "submitting"}
         type="submit"
       >
