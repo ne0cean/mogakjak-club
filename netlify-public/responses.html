@@ -21,42 +21,6 @@
       h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.02em; }
       .subtitle { font-size: 0.875rem; color: #888; margin-bottom: 28px; }
 
-      /* token gate */
-      #gate {
-        background: #fff;
-        border: 1px solid #e4e4e4;
-        border-radius: 16px;
-        padding: 28px;
-        max-width: 360px;
-        margin: 80px auto 0;
-      }
-      #gate h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
-      #token-input {
-        width: 100%;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        padding: 10px 14px;
-        font-size: 0.9rem;
-        font-family: inherit;
-        outline: none;
-        margin-bottom: 10px;
-        transition: border-color 0.15s;
-      }
-      #token-input:focus { border-color: #111; }
-      #gate-btn {
-        width: 100%;
-        background: #111;
-        color: #fff;
-        border: none;
-        border-radius: 999px;
-        padding: 10px;
-        font-size: 0.9rem;
-        font-weight: 700;
-        cursor: pointer;
-        font-family: inherit;
-      }
-      #gate-error { font-size: 0.8rem; color: #a33; margin-top: 8px; display: none; }
-
       /* stats bar */
       .stats {
         display: flex;
@@ -130,20 +94,10 @@
 
       #loading { text-align: center; color: #888; padding: 60px 0; font-size: 0.9rem; }
       #error-msg { color: #a33; text-align: center; padding: 40px 0; font-size: 0.9rem; }
-      #main { display: none; }
     </style>
   </head>
   <body>
     <div class="container">
-      <!-- token gate (shown when ADMIN_TOKEN is set) -->
-      <div id="gate">
-        <h2>설문 응답 조회</h2>
-        <input id="token-input" type="password" placeholder="관리자 토큰" />
-        <button id="gate-btn" type="button">확인</button>
-        <p id="gate-error">토큰이 올바르지 않습니다.</p>
-      </div>
-
-      <!-- main content -->
       <div id="main">
         <h1>AI모각작 — 설문 응답</h1>
         <p class="subtitle" id="subtitle"></p>
@@ -157,18 +111,11 @@
     </div>
 
     <script>
-      const gateEl = document.getElementById("gate");
-      const mainEl = document.getElementById("main");
-      const tokenInput = document.getElementById("token-input");
-      const gateBtn = document.getElementById("gate-btn");
-      const gateError = document.getElementById("gate-error");
       const loadingEl = document.getElementById("loading");
       const errorEl = document.getElementById("error-msg");
       const listEl = document.getElementById("response-list");
       const statsEl = document.getElementById("stats");
       const subtitleEl = document.getElementById("subtitle");
-
-      let savedToken = sessionStorage.getItem("mgj-token") || "";
 
       function fmt(iso) {
         if (!iso) return "";
@@ -179,13 +126,8 @@
         });
       }
 
-      async function loadResponses(token) {
-        const url = token
-          ? `/.netlify/functions/get-responses?token=${encodeURIComponent(token)}`
-          : "/.netlify/functions/get-responses";
-
-        const res = await fetch(url);
-        if (res.status === 401) throw Object.assign(new Error("unauthorized"), { status: 401 });
+      async function loadResponses() {
+        const res = await fetch("/.netlify/functions/get-responses");
         if (!res.ok) throw new Error("서버 오류");
         return res.json();
       }
@@ -246,15 +188,9 @@
           .replace(/>/g, "&gt;");
       }
 
-      async function showMain(token) {
-        gateEl.style.display = "none";
-        mainEl.style.display = "block";
-        loadingEl.style.display = "block";
-        errorEl.style.display = "none";
-        listEl.innerHTML = "";
-
+      async function init() {
         try {
-          const responses = await loadResponses(token);
+          const responses = await loadResponses();
           loadingEl.style.display = "none";
           renderStats(responses);
           if (!responses.length) {
@@ -265,50 +201,10 @@
           listEl.innerHTML = responses.map((r, i) => renderCard(r, i)).join("");
         } catch (err) {
           loadingEl.style.display = "none";
-          if (err.status === 401) {
-            mainEl.style.display = "none";
-            gateEl.style.display = "block";
-            gateError.style.display = "block";
-          } else {
-            errorEl.textContent = err.message || "응답을 불러오지 못했습니다.";
-            errorEl.style.display = "block";
-          }
+          errorEl.textContent = err.message || "응답을 불러오지 못했습니다.";
+          errorEl.style.display = "block";
         }
       }
-
-      // Auto-attempt if no token needed (try first)
-      async function init() {
-        // Try without token first
-        try {
-          const res = await fetch("/.netlify/functions/get-responses");
-          if (res.status === 401) {
-            // Need token — show gate
-            if (savedToken) {
-              showMain(savedToken);
-            } else {
-              gateEl.style.display = "block";
-            }
-          } else {
-            // No token required
-            gateEl.style.display = "none";
-            showMain("");
-          }
-        } catch {
-          gateEl.style.display = "block";
-        }
-      }
-
-      gateBtn.addEventListener("click", () => {
-        const t = tokenInput.value.trim();
-        if (!t) return;
-        sessionStorage.setItem("mgj-token", t);
-        savedToken = t;
-        gateError.style.display = "none";
-        showMain(t);
-      });
-      tokenInput.addEventListener("keydown", e => {
-        if (e.key === "Enter") gateBtn.click();
-      });
 
       init();
     </script>

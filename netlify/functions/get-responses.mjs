@@ -1,19 +1,6 @@
 import { getStore } from "@netlify/blobs";
 
 export default async function handler(req) {
-  // Simple token auth: ?token=ADMIN_TOKEN env var
-  const adminToken = process.env.ADMIN_TOKEN;
-  if (adminToken) {
-    const url = new URL(req.url);
-    const token = url.searchParams.get("token");
-    if (token !== adminToken) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-  }
-
   try {
     const store = getStore("survey-responses");
     const { blobs } = await store.list();
