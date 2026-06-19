@@ -41,3 +41,7 @@ next-env.d.ts
 
 # Local Netlify folder
 .netlify
+
+# A-Team runtime
+.context/analytics.jsonl
+.autoresearch/
