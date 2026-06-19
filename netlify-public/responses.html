@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI모각작 — 설문 응답</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+    />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: #f5f5f5;
+        color: #111;
+        min-height: 100vh;
+        padding: 32px 16px 64px;
+      }
+      .container { max-width: 900px; margin: 0 auto; }
+      h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.02em; }
+      .subtitle { font-size: 0.875rem; color: #888; margin-bottom: 28px; }
+
+      /* token gate */
+      #gate {
+        background: #fff;
+        border: 1px solid #e4e4e4;
+        border-radius: 16px;
+        padding: 28px;
+        max-width: 360px;
+        margin: 80px auto 0;
+      }
+      #gate h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+      #token-input {
+        width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        outline: none;
+        margin-bottom: 10px;
+        transition: border-color 0.15s;
+      }
+      #token-input:focus { border-color: #111; }
+      #gate-btn {
+        width: 100%;
+        background: #111;
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        padding: 10px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      #gate-error { font-size: 0.8rem; color: #a33; margin-top: 8px; display: none; }
+
+      /* stats bar */
+      .stats {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .stat {
+        background: #fff;
+        border: 1px solid #e4e4e4;
+        border-radius: 12px;
+        padding: 12px 18px;
+        font-size: 0.8rem;
+        color: #555;
+      }
+      .stat strong { display: block; font-size: 1.4rem; font-weight: 700; color: #111; }
+
+      /* response cards */
+      .response-list { display: flex; flex-direction: column; gap: 14px; }
+      .card {
+        background: #fff;
+        border: 1px solid #e4e4e4;
+        border-radius: 16px;
+        padding: 20px 22px;
+      }
+      .card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+      .card-num {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #aaa;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .badge {
+        font-size: 0.72rem;
+        font-weight: 600;
+        background: #f0f0f0;
+        color: #555;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+      .badge.exp { background: #111; color: #fff; }
+      .card-time { font-size: 0.72rem; color: #bbb; margin-left: auto; }
+
+      .field-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #aaa;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+        margin-top: 12px;
+      }
+      .field-label:first-of-type { margin-top: 0; }
+      .field-value { font-size: 0.9rem; color: #222; line-height: 1.65; }
+      .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+      .chip {
+        font-size: 0.75rem;
+        background: #f5f5f5;
+        border: 1px solid #e8e8e8;
+        color: #444;
+        padding: 2px 9px;
+        border-radius: 999px;
+      }
+
+      #loading { text-align: center; color: #888; padding: 60px 0; font-size: 0.9rem; }
+      #error-msg { color: #a33; text-align: center; padding: 40px 0; font-size: 0.9rem; }
+      #main { display: none; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- token gate (shown when ADMIN_TOKEN is set) -->
+      <div id="gate">
+        <h2>설문 응답 조회</h2>
+        <input id="token-input" type="password" placeholder="관리자 토큰" />
+        <button id="gate-btn" type="button">확인</button>
+        <p id="gate-error">토큰이 올바르지 않습니다.</p>
+      </div>
+
+      <!-- main content -->
+      <div id="main">
+        <h1>AI모각작 — 설문 응답</h1>
+        <p class="subtitle" id="subtitle"></p>
+
+        <div class="stats" id="stats"></div>
+
+        <div id="loading">불러오는 중...</div>
+        <p id="error-msg" style="display:none"></p>
+        <div class="response-list" id="response-list"></div>
+      </div>
+    </div>
+
+    <script>
+      const gateEl = document.getElementById("gate");
+      const mainEl = document.getElementById("main");
+      const tokenInput = document.getElementById("token-input");
+      const gateBtn = document.getElementById("gate-btn");
+      const gateError = document.getElementById("gate-error");
+      const loadingEl = document.getElementById("loading");
+      const errorEl = document.getElementById("error-msg");
+      const listEl = document.getElementById("response-list");
+      const statsEl = document.getElementById("stats");
+      const subtitleEl = document.getElementById("subtitle");
+
+      let savedToken = sessionStorage.getItem("mgj-token") || "";
+
+      function fmt(iso) {
+        if (!iso) return "";
+        const d = new Date(iso);
+        return d.toLocaleString("ko-KR", {
+          month: "2-digit", day: "2-digit",
+          hour: "2-digit", minute: "2-digit",
+        });
+      }
+
+      async function loadResponses(token) {
+        const url = token
+          ? `/.netlify/functions/get-responses?token=${encodeURIComponent(token)}`
+          : "/.netlify/functions/get-responses";
+
+        const res = await fetch(url);
+        if (res.status === 401) throw Object.assign(new Error("unauthorized"), { status: 401 });
+        if (!res.ok) throw new Error("서버 오류");
+        return res.json();
+      }
+
+      function renderStats(responses) {
+        const expCount = {};
+        responses.forEach(r => {
+          expCount[r.experience] = (expCount[r.experience] || 0) + 1;
+        });
+        const topExp = Object.entries(expCount).sort((a, b) => b[1] - a[1])[0];
+
+        statsEl.innerHTML = [
+          `<div class="stat"><strong>${responses.length}</strong>총 응답</div>`,
+          topExp ? `<div class="stat"><strong>${topExp[1]}</strong>${topExp[0]}</div>` : "",
+        ].join("");
+
+        subtitleEl.textContent = `총 ${responses.length}명이 응답했습니다`;
+      }
+
+      function renderCard(r, idx) {
+        const tools = Array.isArray(r.tools) ? r.tools : [];
+        const goals = Array.isArray(r.goals) ? r.goals : [];
+        const topics = Array.isArray(r.firstSessionTopics) ? r.firstSessionTopics : [];
+
+        const allTools = r.toolsOther ? [...tools, r.toolsOther] : tools;
+        const allGoals = r.goalsOther ? [...goals, r.goalsOther] : goals;
+        const allTopics = r.firstSessionTopicsOther ? [...topics, r.firstSessionTopicsOther] : topics;
+
+        return `
+          <div class="card">
+            <div class="card-header">
+              <span class="card-num">#${idx + 1}</span>
+              <span class="badge exp">${r.experience || ""}</span>
+              <span class="card-time">${fmt(r.submittedAt)}</span>
+            </div>
+
+            <p class="field-label">해보고 싶은 작업</p>
+            <p class="field-value">${esc(r.desiredWork)}</p>
+
+            <p class="field-label">막히는 지점</p>
+            <p class="field-value">${esc(r.blocker)}</p>
+
+            <p class="field-label">AI 툴</p>
+            <div class="chips">${allTools.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
+
+            <p class="field-label">얻고 싶은 것</p>
+            <div class="chips">${allGoals.map(g => `<span class="chip">${esc(g)}</span>`).join("")}</div>
+
+            <p class="field-label">1회차 주제</p>
+            <div class="chips">${allTopics.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
+          </div>`;
+      }
+
+      function esc(str) {
+        return (str || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      async function showMain(token) {
+        gateEl.style.display = "none";
+        mainEl.style.display = "block";
+        loadingEl.style.display = "block";
+        errorEl.style.display = "none";
+        listEl.innerHTML = "";
+
+        try {
+          const responses = await loadResponses(token);
+          loadingEl.style.display = "none";
+          renderStats(responses);
+          if (!responses.length) {
+            errorEl.textContent = "아직 응답이 없습니다.";
+            errorEl.style.display = "block";
+            return;
+          }
+          listEl.innerHTML = responses.map((r, i) => renderCard(r, i)).join("");
+        } catch (err) {
+          loadingEl.style.display = "none";
+          if (err.status === 401) {
+            mainEl.style.display = "none";
+            gateEl.style.display = "block";
+            gateError.style.display = "block";
+          } else {
+            errorEl.textContent = err.message || "응답을 불러오지 못했습니다.";
+            errorEl.style.display = "block";
+          }
+        }
+      }
+
+      // Auto-attempt if no token needed (try first)
+      async function init() {
+        // Try without token first
+        try {
+          const res = await fetch("/.netlify/functions/get-responses");
+          if (res.status === 401) {
+            // Need token — show gate
+            if (savedToken) {
+              showMain(savedToken);
+            } else {
+              gateEl.style.display = "block";
+            }
+          } else {
+            // No token required
+            gateEl.style.display = "none";
+            showMain("");
+          }
+        } catch {
+          gateEl.style.display = "block";
+        }
+      }
+
+      gateBtn.addEventListener("click", () => {
+        const t = tokenInput.value.trim();
+        if (!t) return;
+        sessionStorage.setItem("mgj-token", t);
+        savedToken = t;
+        gateError.style.display = "none";
+        showMain(t);
+      });
+      tokenInput.addEventListener("keydown", e => {
+        if (e.key === "Enter") gateBtn.click();
+      });
+
+      init();
+    </script>
+  </body>
+</html>
