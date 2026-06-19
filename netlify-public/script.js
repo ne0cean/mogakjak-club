@@ -39,18 +39,20 @@ form.addEventListener("submit", async (event) => {
   try {
     const formData = new FormData(form);
     const body = new URLSearchParams(formData).toString();
-    const response = await fetch("/", {
+    const response = await fetch("/.netlify/functions/submit-survey", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body,
     });
 
-    if (!response.ok) {
-      throw new Error("submit failed");
-    }
+    const result = await response.json().catch(() => null);
 
-    form.reset();
-    showSuccess();
+    if (!response.ok) {
+      showError(result?.error || "응답을 저장하지 못했습니다. 잠시 후 다시 시도해주세요.");
+    } else {
+      form.reset();
+      showSuccess();
+    }
   } catch {
     showError("응답을 저장하지 못했습니다. 잠시 후 다시 시도해주세요.");
   } finally {
