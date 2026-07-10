@@ -118,36 +118,41 @@ export default function SurveyForm() {
 
     setStatus("submitting");
 
-    const response = await fetch("/api/survey", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        desiredWork: String(formData.get("desiredWork") ?? ""),
-        blocker: String(formData.get("blocker") ?? ""),
-        experience: String(formData.get("experience") ?? ""),
-        tools: selectedTools,
-        toolsOther: String(formData.get("toolsOther") ?? ""),
-        goals: selectedGoals,
-        goalsOther: String(formData.get("goalsOther") ?? ""),
-        firstSessionTopics: selectedTopics,
-        firstSessionTopicsOther: String(
-          formData.get("firstSessionTopicsOther") ?? ""
-        ),
-      }),
-    });
+    try {
+      const response = await fetch("/api/survey", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          desiredWork: String(formData.get("desiredWork") ?? ""),
+          blocker: String(formData.get("blocker") ?? ""),
+          experience: String(formData.get("experience") ?? ""),
+          tools: selectedTools,
+          toolsOther: String(formData.get("toolsOther") ?? ""),
+          goals: selectedGoals,
+          goalsOther: String(formData.get("goalsOther") ?? ""),
+          firstSessionTopics: selectedTopics,
+          firstSessionTopicsOther: String(
+            formData.get("firstSessionTopicsOther") ?? ""
+          ),
+        }),
+      });
 
-    if (!response.ok) {
-      const payload = (await response.json().catch(() => null)) as {
-        error?: string;
-      } | null;
-      setError(payload?.error ?? "응답을 저장하지 못했습니다. 잠시 후 다시 시도해주세요.");
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as {
+          error?: string;
+        } | null;
+        setError(payload?.error ?? "응답을 저장하지 못했습니다. 잠시 후 다시 시도해주세요.");
+        setStatus("idle");
+        return;
+      }
+
+      window.localStorage.setItem("ai-mogakjak-submitted", "true");
+      form.reset();
+      setStatus("submitted");
+    } catch {
+      setError("네트워크 오류가 발생했습니다. 인터넷 연결을 확인하고 다시 시도해주세요.");
       setStatus("idle");
-      return;
     }
-
-    window.localStorage.setItem("ai-mogakjak-submitted", "true");
-    form.reset();
-    setStatus("submitted");
   }
 
   if (status === "submitted") {

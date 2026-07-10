@@ -1,6 +1,13 @@
 import { getDb } from "@/db";
 import { surveyResponses } from "@/db/schema";
 
+class ValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ValidationError";
+  }
+}
+
 const validExperiences = new Set([
   "거의 처음",
   "몇 번 써봤음",
@@ -10,16 +17,16 @@ const validExperiences = new Set([
 
 function textField(value: unknown, label: string, maxLength: number) {
   if (typeof value !== "string") {
-    throw new Error(`${label}을 입력해주세요.`);
+    throw new ValidationError(`${label}을 입력해주세요.`);
   }
 
   const trimmed = value.trim();
   if (!trimmed) {
-    throw new Error(`${label}을 입력해주세요.`);
+    throw new ValidationError(`${label}을 입력해주세요.`);
   }
 
   if (trimmed.length > maxLength) {
-    throw new Error(`${label}은 ${maxLength}자 이내로 입력해주세요.`);
+    throw new ValidationError(`${label}은 ${maxLength}자 이내로 입력해주세요.`);
   }
 
   return trimmed;
@@ -35,7 +42,7 @@ function optionalTextField(value: unknown, maxLength: number) {
 
 function stringList(value: unknown, label: string) {
   if (!Array.isArray(value)) {
-    throw new Error(`${label}을 하나 이상 선택해주세요.`);
+    throw new ValidationError(`${label}을 하나 이상 선택해주세요.`);
   }
 
   const list = value
@@ -44,7 +51,7 @@ function stringList(value: unknown, label: string) {
     .filter(Boolean);
 
   if (!list.length) {
-    throw new Error(`${label}을 하나 이상 선택해주세요.`);
+    throw new ValidationError(`${label}을 하나 이상 선택해주세요.`);
   }
 
   return Array.from(new Set(list)).slice(0, 16);
@@ -107,7 +114,7 @@ export async function POST(request: Request) {
     return Response.json({ id: response.id }, { status: 201 });
   } catch (error) {
     const message = routeError(error);
-    const status = error instanceof Error ? 400 : 500;
+    const status = error instanceof ValidationError ? 400 : 500;
     return Response.json({ error: message }, { status });
   }
 }
