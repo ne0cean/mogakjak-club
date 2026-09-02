@@ -1,0 +1,70 @@
+/me DOM 구조 덤프 (2026-09-02, PII 마스킹)
+표기: tag.class1.class2 "leaf 텍스트 앞 35자"
+
+body
+  div
+  svg (boil 필터 defs — me-pipeline.skeleton.txt와 동일 6종)
+  main.me-page
+    header.app-bar
+      a.app-bar__brand > img
+      nav.app-bar__tabs
+        a "내 폴더"
+        a "안내"
+      div.app-bar__account
+        details.account-menu
+          summary.account-menu__trigger > svg
+          div.account-menu__panel
+            span.account-menu__email "user@example.com"
+            a "내 워크플로우"
+            a "프로필 고치기"
+            form > input + button.account-menu__logout "로그아웃"
+    p.app-caption "홍길동님의 비밀 폴더"
+    section.me-todo                            ← 할 일 체크리스트
+      p.me-todo__label "할 일"
+      ul
+        li.me-todo__item.me-todo__item--done
+          span.me-todo__mark > svg (체크)
+          span.me-todo__body
+            strong "참가 신청"
+            span "완료"
+        li.me-todo__item.me-todo__item--done
+          span.me-todo__mark > svg
+          a.me-todo__body
+            strong "내 워크플로우 고치기"
+            span "적어 주셨습니다"
+        li.me-todo__item                       ← 미완료는 --done 없음, 링크 화살표
+          span.me-todo__mark
+          a.me-todo__body
+            strong "프로필 다듬기"
+            span "선택"
+    (section: APPLICATION STATUS)              ← 신청 상태 타임라인
+      p "APPLICATION STATUS"
+      h1 "신청 완료"  + 날짜 "2026년 9월 2일"
+      (3점 진행 그래프: 신청 완료[채운 점] ─── 검토 "9월 4일 마감"[링 점] ─── 선발 결과 "9월 7일 발표"[빈 점])
+      (신청 정보 4열: 소속 / 역할 / 직무 / 연락처)
+    (section: 공개 프로필 카드 미리보기 — 오렌지 배경)
+      div.profile-cover
+        (아바타 이니셜 원)
+        div.profile-cover__copy
+          p.profile-cover__eyebrow "AI CHEATING DAY 2026, 마케팅"
+          h2 "홍길동"
+          p.profile-cover__role "(소속, 직책)"
+          p.profile-cover__detail "(한 줄 소개)"
+          p.profile-cover__intro "(자유 소개)"
+        div.profile-cover__brought
+          span "가져온 워크플로우"
+          strong "(신청서의 caseTitle이 여기 표시)"
+        div.profile-cover__tools               ← 쓰는 도구 칩 목록
+          span × N ("ChatGPT" "Claude" "Gemini" "Perplexity" "MCP" "Obsidian" "Ollama" 등)
+      section.profile-content
+        div.profile-main
+          article
+            span "01 / WORKFLOW"
+            (신청서 공개 항목 미리보기)
+            p "참가 신청서에서 공개하기로 한 내용입니다. 이메일과 연락처는 공…"
+          article.answer-block.answer-block--empty   ← 미완료 항목의 엠티 스테이트
+            span "MY TYPE"
+            h2 "아직 안 해보셨습니다"
+            p "열두 문항이면 끝납니다. 결과는 공개 카드에도 함께 붙어, 당일…"
+            a.form-button "→"
+  next-route-announcer

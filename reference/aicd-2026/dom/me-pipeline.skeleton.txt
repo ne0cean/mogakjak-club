@@ -1,0 +1,120 @@
+/me/pipeline DOM 구조 덤프 (2026-09-02, PII 마스킹, script/link/meta 제외)
+표기: tag.class1.class2 "leaf 텍스트 앞 40자" / [ph:] = placeholder
+일부 구간 미회수([...gap...]) — 텍스트 전문은 ../text/me-pipeline.txt 참조
+
+body
+  div
+  svg
+    defs
+      filter#boil-1  (feturbulence + fedisplacementmap)
+      filter#boil-2  (feturbulence + fedisplacementmap)
+      filter#boil-3  (feturbulence + fedisplacementmap)
+      filter#boil-v1 (feturbulence + fedisplacementmap)
+      filter#boil-v2 (feturbulence + fedisplacementmap)
+      filter#boil-v3 (feturbulence + fedisplacementmap)
+  main.me-page
+    header.app-bar
+      a.app-bar__brand
+        img
+      nav.app-bar__tabs
+        a "내 폴더"
+        a "안내"
+      div.app-bar__account
+        details.account-menu
+          summary.account-menu__trigger
+            svg > path
+          div.account-menu__panel
+            span.account-menu__email "user@example.com"
+            a "내 워크플로우"
+            a "프로필 고치기"
+            form
+              input
+              button.account-menu__logout "로그아웃"
+    section.me-hero.me-hero--compact
+      a.me-back
+        span "←"
+      p "MY WORKFLOW"
+      (h1 "내 워크플로우." + 마감 안내 "상세히 작성할수록 선발 확률이 높아져요. (~9/4 금 마감)")
+      [...gap: 섹션 01 헤더 "내 워크플로우" / 자동완성 배너 "AI에게 맡기고 붙여넣기"...]
+    (section: 자동완성 4단계)
+      ol.interview-flow
+        li
+          div.interview-flow__head
+            span.interview-flow__step "1"
+            div
+              b "프롬프트 복사하기"
+              small "프롬프트 복사하기를 눌러 자주 쓰는 AI에 붙여 넣으세요. 세션 로그를 "
+          div.interview-preview
+            pre.interview-prompt "# AI 컨닝데이 워크플로우 인터뷰 ..."   ← 전문: ../prompt-interview.md
+            button.interview-preview__toggle "전체 보기"
+          button.form-button.form-button--dark.interview-copy "프롬프트 복사하기"
+        li
+          div.interview-flow__head
+            span.interview-flow__step "2"
+            div
+              b "AI의 질문에 답하기"
+              small "AI와 질문과 답변을 주고받으면 신청서 초안이 완성됩니다."
+        li
+          div.interview-flow__head
+            span.interview-flow__step "3"
+            div
+              b "완성된 내용 확인하기"
+              small "AI가 초안을 검토합니다. 빠지거나 사실과 다른 내용이 없는지 확인해주세요."
+        li
+          div.interview-flow__head
+            span.interview-flow__step "4"
+            div
+              b "붙여 넣고 아래 신청서 전체 자동 완성하기"
+              small "마지막 JSON을 아래 칸에 붙여 넣으면 신청서 전체가 자동 완성됩니다."
+          textarea [ph:여기에 붙여 넣으세요]     ← JSON 붙여넣기 → 아래 폼 자동완성
+      p "채워진 항목은 모두 직접 고치실 수 있습니다. 맨 아래 저장 버튼을 눌러야 저장됩니다."
+    (form: 워크플로우 5문항)
+      label
+        span.field-title "워크플로우에 이름을 붙여주세요."
+        small "무슨 일을 하는 워크플로우인지 드러나는 이름이면 됩니다."
+        input [ph:예: 주간보고 작성 / 광고 소재 만들기 / 고객 문의 분류]
+      label
+        span.field-title "어떤 문제를 푸는 워크플로우인가요?"
+        small "원래 뭐가 불편했는지, 혹은 뭘 못 하고 있었는지 적어주세요."
+        textarea [ph:예: 매주 회의록 4~5개를 다시 읽으며 보고서를 써야]
+      label
+        span.field-title "AI가 어떤 순서로 도나요?"
+        small "1, 2, 3 순서로 적어주세요. 무엇을 넣으면 무엇이 나오는지가 보이면"
+        textarea [ph:예:\n1. 회의 녹취와 지난주 보고서를 ChatGPT에]
+      label
+        span.field-title "이 워크플로우로 어떤 성과나 변화가 있었나요?"
+        small "가능하면 숫자로 적어주세요."
+        textarea [ph:예: 보고서 작성 시간이 1시간에서 20분으로 줄었습니]
+      label
+        span.field-title "이 워크플로우는 어떻게 만들었고, 어디서 막혔나요?"
+        small "처음엔 어떻게 시작했고 뭘 바꿔서 지금 모양이 됐는지 적어주세요. 지금은"
+        textarea [ph:예: 처음에는 회의 녹취만 넣었더니 형식이 매번 달랐고]
+      fieldset
+        legend
+          span.section-step "02"
+          span.section-title "컨닝하고 싶은 것"
+        p.fieldset-intro "조 편성과 네트워킹 파티 매칭에 사용됩니다."
+        div.choice-block                       ← 관심 AI 주제 (최대 3)
+          p.choice-question
+            span.fieldset-counter "0/3"
+          div.topic-grid
+            label.topic-option > input + span   × 12개
+              "프롬프트와 컨텍스트 관리" "AI 결과 품질 검증과 할루시네이션 대응"
+              "AI 코딩과 개발 워크플로우" "리서치와 문서 작성" "데이터 분석과 리포팅"
+              "이미지, 콘텐츠 제작" "고객 응대와 세일즈" "반복 업무 자동화"
+              "에이전트, 스킬, MCP" "사내 데이터 활용과 보안"
+              "모델 선택과 비용 최적화" "로컬 LLM, 오픈소스 모델"
+        div.choice-block                       ← 네트워킹 토크 주제 (최대 3)
+          p.choice-question
+            span.fieldset-counter "0/3"
+          small.choice-hint "네트워킹 파티 매칭에 사용됩니다."
+          div.topic-grid
+            label.topic-option > input + span   × 10개
+              "AI 이후, 내 직무는 어떻게 될까" "AI 시대, 주니어는 어디서 배울까"
+              "이직 VS 창업" "AI를 잘 쓰는 사람은 어떻게 알아보나"
+              "AI 의존성, 줄어드는 내 실력" "AI가 줄인 일 VS 늘린 일"
+              "AI에게 어디까지 맡겨도 될까" "AI로 만든 결과물은 누구의 것일까"
+              "조직에 AI를 심는 법" "일 말고 AI에게 시켜본 것"
+        (자유 주제 textarea "목록에 없지만, AI컨닝데이에서 이야기해보고 싶은 주제가 있나요? 선택")
+        (필수 동의 checkbox "신청서에 작성한 워크플로우를 다른 참가자에게 공개하는 데 동의합니다.")
+        (저장 버튼 "저장하기 →")
